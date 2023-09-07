@@ -19,23 +19,24 @@ function HomePage() {
             alert("Please select both a PDF file and an option.");
             return;
         }
-
+    
         const formData = new FormData();
         formData.append('file', file);
         formData.append('choice', selectedOption);
-
+    
         try {
-            const response = await axios.post('http://localhost:5000/get-prompt', formData, {
+            const response = await axios.post('https://billing-automater-801d93465a2c.herokuapp.com/get-prompt', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
-                withCredentials: true // Add this line
+                withCredentials: true // Assuming you still need this for cross-origin credentials
             });
             console.log(response.data.response);
         } catch (error) {
             console.error("Error fetching prompt:", error);
         }
     }
+    
 
     return (
         <div>
