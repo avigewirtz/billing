@@ -53,7 +53,7 @@ function HomePage() {
 
     return (
         <div>
-            <h1>Welcome to HomePage</h1>
+            <h1>The smartest way to elevate your progress notes</h1>
 
             <label>Input Text:</label>
             <textarea rows="10" cols="50" value={text} onChange={handleTextChange}></textarea>
