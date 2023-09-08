@@ -69,14 +69,14 @@ h2 {
     color: #444;
 }
 .response-box {
-    width: 100%; /* This ensures the box uses the entire width of its parent container */
+    width: 50%; /* This ensures the box uses the entire width of its parent container */
     margin-top: 30px;
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #f9f9f9;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-    min-height: 100px;
+    min-height: 150px;
     box-sizing: border-box; /* Makes sure padding and border are included in the total width */
     overflow-wrap: break-word; /* Breaks long words and ensures they don't exceed the box's width */
 }
