@@ -5,10 +5,10 @@ import * as pdfjs from 'pdfjs-dist/legacy/build/pdf';
 
 pdfjs.GlobalWorkerOptions.workerSrc = process.env.PUBLIC_URL + '/pdf.worker.js';
 
-
 function HomePage() {
     const [file, setFile] = useState(null);
     const [selectedOption, setSelectedOption] = useState('');
+    const [responseText, setResponseText] = useState(''); // Added to capture response data
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -18,6 +18,7 @@ function HomePage() {
         setSelectedOption(e.target.value);
     }
 
+    // Function to extract text from uploaded PDF
     const extractTextFromPDF = async (pdfFile) => {
         const pdf = await pdfjs.getDocument({ url: URL.createObjectURL(pdfFile) }).promise;
         let text = '';
@@ -31,6 +32,7 @@ function HomePage() {
         return text;
     }
 
+    // Function to handle form submission
     const handleSubmit = async () => {
         if (!file || !selectedOption) {
             alert("Please select both a PDF file and an option.");
@@ -52,6 +54,7 @@ function HomePage() {
                 withCredentials: true
             });
             console.log(response.data.response);
+            setResponseText(response.data.response); // Save response data to state
         } catch (error) {
             console.error("Error fetching prompt:", error);
         }
@@ -72,6 +75,12 @@ function HomePage() {
                 <option value="5">Care plan</option>
             </select>
             <button onClick={handleSubmit}>Submit</button>
+
+            {/* Display response data */}
+            <div className="response-section">
+                <h2>Response:</h2>
+                <p>{responseText}</p>
+            </div>
         </div>
     );
 }
