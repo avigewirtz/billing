@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './HomePage.css';
-import { getDocument } from 'pdfjs-dist/es5/pdf';
+import * as pdfjs from 'pdfjs-dist/legacy/build/pdf';
 
 function HomePage() {
     const [file, setFile] = useState(null);
@@ -16,7 +16,7 @@ function HomePage() {
     }
 
     const extractTextFromPDF = async (pdfFile) => {
-        const pdf = await getDocument({url: URL.createObjectURL(pdfFile)}).promise;
+        const pdf = await pdfjs.getDocument({url: URL.createObjectURL(pdfFile)}).promise;
         let text = '';
 
         for (let i = 0; i < pdf.numPages; i++) {
