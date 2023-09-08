@@ -74,7 +74,9 @@ function HomePage() {
 
             <div className="response-section">
                 <h2>Response:</h2>
-                <p>{responseText}</p>
+                <div className="response-box">
+                    <p>{responseText}</p>
+                </div>
             </div>
         </div>
     );
