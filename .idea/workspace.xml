@@ -17,9 +17,6 @@
     <analyzeAfterCompile>true</analyzeAfterCompile>
     <toolWindowToFront>false</toolWindowToFront>
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/billing-backend/app.py" root0="FORCE_HIGHLIGHTING" />
-  </component>
   <component name="ProjectId" id="2V4sc93Ik8nVOHbhrY9vDBAaRIZ" />
   <component name="ProjectViewState">
     <option name="abbreviatePackageNames" value="true" />
