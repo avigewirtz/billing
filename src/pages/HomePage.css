@@ -10,7 +10,7 @@ h1 {
     margin-bottom: 30px;
 }
 
-div {
+.container {
     max-width: 600px;
     margin: 20px auto;
     padding: 20px;
