@@ -1,57 +1,50 @@
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
+/* Basic Reset */
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Container */
+.app {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f4f4f4;
 }
 
-.container {
-    max-width: 50%;
+main {
     background-color: #fff;
-    padding: 20px 40px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-}
-
-h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #333;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 50%;  /* Adjusted to be 50% */
+    max-width: 500px;
 }
 
 label {
-    font-weight: bold;
-    margin-top: 20px;
-    display: block;
-    color: #555;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
 }
 
-input[type="file"],
-input[type="text"],
-textarea,
-select {
+input, textarea, select, button {
     width: 100%;
     padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 1rem;
+    margin-top: 10px; /* Separation between elements */
 }
 
 button {
-    display: block;
-    width: 100%;
-    padding: 10px 15px;
-    background-color: #007bff;
+    cursor: pointer;
+    background-color: #007BFF;
     color: #fff;
     border: none;
-    border-radius: 5px;
-    margin-top: 20px;
-    cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
@@ -59,34 +52,40 @@ button:hover {
     background-color: #0056b3;
 }
 
+button:disabled {
+    background-color: #B0C4DE; /* A light steel blue to indicate disabled */
+    cursor: not-allowed;
+}
+
 .response-section {
     margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.output-box {
+    width: 100%;  /* or your preferred width */
+    min-height: 200px;  /* or your preferred height */
+    border: 1px solid #ccc;
+    padding: 10px;
+    resize: none;  /* to prevent resizing */
+    overflow-wrap: break-word;  /* to wrap long words */
 }
 
 h2 {
-    font-size: 20px;
-    margin-bottom: 10px;
-    color: #444;
-}
-.response-box {
-
-    margin-top: 30px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-    min-height: 150px;
-    max-width: 100%;
-    box-sizing: border-box; /* Makes sure padding and border are included in the total width */
-    overflow-wrap: break-word; /* Breaks long words and ensures they don't exceed the box's width */
+    margin-top: 0;
 }
 
+.error-message {
+    color: red;
+    text-align: center;
+    font-size: 0.875rem;
+    margin-top: 10px;
+}
 
-
-h2 {
-    font-size: 20px;
-    margin-bottom: 10px;
-    margin-top: 0; /* Reset the top margin to avoid extra space at the top of the box */
-    color: #444;
+input:focus, textarea:focus, select:focus {
+    border-color: #007BFF;
+    outline: none;
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
 }
