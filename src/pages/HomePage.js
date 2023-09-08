@@ -27,6 +27,7 @@ function HomePage() {
             const page = await pdf.getPage(i + 1);
             const content = await page.getTextContent();
             text += content.items.map(item => item.str).join(' ');
+            console.log(`Page ${i + 1} content:`, content);
         }
 
         return text;
