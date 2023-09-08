@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './HomePage.css';
+import { getDocument } from 'pdfjs-dist/es5/pdf';
 
 function HomePage() {
     const [file, setFile] = useState(null);
@@ -14,20 +15,36 @@ function HomePage() {
         setSelectedOption(e.target.value);
     }
 
+    const extractTextFromPDF = async (pdfFile) => {
+        const pdf = await getDocument({url: URL.createObjectURL(pdfFile)}).promise;
+        let text = '';
+
+        for (let i = 0; i < pdf.numPages; i++) {
+            const page = await pdf.getPage(i + 1);
+            const content = await page.getTextContent();
+            text += content.items.map(item => item.str).join(' ');
+        }
+
+        return text;
+    }
+
     const handleSubmit = async () => {
         if (!file || !selectedOption) {
             alert("Please select both a PDF file and an option.");
             return;
         }
-    
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('choice', selectedOption);
-    
+
         try {
-            const response = await axios.post('https://billing-automater-801d93465a2c.herokuapp.com/get-prompt', formData, {
+            const pdfText = await extractTextFromPDF(file);
+
+            const data = {
+                text: pdfText,
+                choice: selectedOption
+            };
+
+            const response = await axios.post('https://billing-automater-801d93465a2c.herokuapp.com/get-prompt', data, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'application/json'
                 },
                 withCredentials: true // Assuming you still need this for cross-origin credentials
             });
@@ -36,17 +53,12 @@ function HomePage() {
             console.error("Error fetching prompt:", error);
         }
     }
-    
 
     return (
         <div>
             <h1>Welcome to HomePage</h1>
-
-            {/* File Upload */}
             <label>Upload PDF:</label>
             <input type="file" accept=".pdf" onChange={handleFileChange} />
-
-            {/* Options Dropdown */}
             <label>Select an option:</label>
             <select onChange={handleOptionChange}>
                 <option value="">--Choose an option--</option>
@@ -56,8 +68,6 @@ function HomePage() {
                 <option value="4">Spell check</option>
                 <option value="5">Care plan</option>
             </select>
-
-            {/* Submit Button */}
             <button onClick={handleSubmit}>Submit</button>
         </div>
     );
