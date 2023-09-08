@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './HomePage.css';
-import * as pdfjs from 'pdfjs-dist/legacy/build/pdf';
+import pdf from 'pdf-parse';
 
 function HomePage() {
     const [file, setFile] = useState(null);
@@ -16,16 +16,13 @@ function HomePage() {
     }
 
     const extractTextFromPDF = async (pdfFile) => {
-        const pdf = await pdfjs.getDocument({url: URL.createObjectURL(pdfFile)}).promise;
-        let text = '';
+        // Read the PDF as a buffer
+        const buffer = await pdfFile.arrayBuffer();
 
-        for (let i = 0; i < pdf.numPages; i++) {
-            const page = await pdf.getPage(i + 1);
-            const content = await page.getTextContent();
-            text += content.items.map(item => item.str).join(' ');
-        }
+        // Extract data from the PDF using pdf-parse
+        const data = await pdf(buffer);
 
-        return text;
+        return data.text;
     }
 
     const handleSubmit = async () => {
