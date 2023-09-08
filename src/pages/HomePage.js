@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './HomePage.css'
 
 function HomePage() {
     const [text, setText] = useState('');  // For directly inputting text
