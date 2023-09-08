@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './HomePage.css';
-import pdf from 'pdf-parse';
+import { PDFDocument } from 'pdf-lib';
 
 function HomePage() {
     const [file, setFile] = useState(null);
@@ -16,13 +16,19 @@ function HomePage() {
     }
 
     const extractTextFromPDF = async (pdfFile) => {
-        // Read the PDF as a buffer
-        const buffer = await pdfFile.arrayBuffer();
+        const fileBuffer = await pdfFile.arrayBuffer();
+        const pdfDoc = await PDFDocument.load(fileBuffer);
 
-        // Extract data from the PDF using pdf-parse
-        const data = await pdf(buffer);
+        let text = '';
 
-        return data.text;
+        const pageCount = pdfDoc.getPageCount();
+        for (let i = 0; i < pageCount; i++) {
+            const page = pdfDoc.getPage(i);
+            const content = page.getContentStreamTextContent();
+            text += content.items.map(item => item.str).join(' ');
+        }
+
+        return text;
     }
 
     const handleSubmit = async () => {
@@ -43,7 +49,7 @@ function HomePage() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                withCredentials: true // Assuming you still need this for cross-origin credentials
+                withCredentials: true
             });
             console.log(response.data.response);
         } catch (error) {
