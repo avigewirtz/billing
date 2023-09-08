@@ -51,35 +51,42 @@ function HomePage() {
         }
     }
 
-    return (
-        <div>
-            <h1>The smartest way to elevate your progress notes</h1>
+      return (
+            <div className="app">
+                <main>
+                    <h1>The smartest way to elevate your progress notes</h1>
 
-            <label>Input Text:</label>
-            <textarea rows="10" cols="50" value={text} onChange={handleTextChange}></textarea>
+                    <label>Input Text:</label>
+                    <textarea rows="10" cols="50" value={text} onChange={handleTextChange}></textarea>
 
-            <label>Or Upload Text File:</label>
-            <input type="file" accept=".txt" onChange={handleFileChange} />
+                    <label>Or Upload Text File:</label>
+                    <input type="file" accept=".txt" onChange={handleFileChange} />
 
-            <label>Select an option:</label>
-            <select onChange={handleOptionChange}>
-                <option value="">--Choose an option--</option>
-                <option value="1">Diagnosis</option>
-                <option value="2">ICD10 Codes</option>
-                <option value="3">Medicare verbiage if the patient can benefit for physical therapy based off the patient's diagnoses.</option>
-                <option value="4">Spell check</option>
-                <option value="5">Care plan</option>
-            </select>
-            <button onClick={handleSubmit}>Submit</button>
+                    <label>Select an option:</label>
+                    <select onChange={handleOptionChange}>
+                        <option value="">--Choose an option--</option>
+                        <option value="1">Diagnosis</option>
+                        <option value="2">ICD10 Codes</option>
+                        <option value="3">Medicare verbiage if the patient can benefit for physical therapy based off the patient's diagnoses.</option>
+                        <option value="4">Spell check</option>
+                        <option value="5">Care plan</option>
+                    </select>
+                    <button onClick={handleSubmit}>Submit</button>
 
-            <div className="response-section">
-                <h2>Response:</h2>
-                <div className="response-box">
-                    <p>{responseText}</p>
-                </div>
+                    <div className="response-section">
+                        <h2>Response:</h2>
+                        <div className="output-box">
+                            <p>{responseText}</p>
+                        </div>
+                    </div>
+                </main>
             </div>
-        </div>
-    );
-}
+        );
+    }
 
-export default HomePage;
+    export default HomePage;
+
+
+
+
+

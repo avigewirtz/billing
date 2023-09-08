@@ -1,91 +1,89 @@
-/* Basic Reset */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-}
+/* HomePage.css */
 
-/* Container */
 .app {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: #f4f4f4;
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    max-width: 580px;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);
 }
 
 main {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 50%;  /* Adjusted to be 50% */
-    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+h1 {
+    color: #333;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 10px;
 }
 
 label {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 0px;
 }
 
-input, textarea, select, button {
+textarea {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-    margin-top: 10px; /* Separation between elements */
+    border-radius: 5px;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+
+input[type="file"] {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    appearance: none;
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
 }
 
 button {
-    cursor: pointer;
+    padding: 10px 15px;
     background-color: #007BFF;
     color: #fff;
     border: none;
+    border-radius: 5px;
+    cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-bottom: 0px;
 }
 
 button:hover {
     background-color: #0056b3;
 }
 
-button:disabled {
-    background-color: #B0C4DE; /* A light steel blue to indicate disabled */
-    cursor: not-allowed;
-}
-
 .response-section {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+    margin-top: 0px;
 }
 
 .output-box {
-    width: 100%;  /* or your preferred width */
-    min-height: 200px;  /* or your preferred height */
     border: 1px solid #ccc;
-    padding: 10px;
-    resize: none;  /* to prevent resizing */
-    overflow-wrap: break-word;  /* to wrap long words */
+    border-radius: 5px;
+    padding: 20px;
+    min-height: 100px;
+    background-color: #f9f9f9;
 }
 
 h2 {
-    margin-top: 0;
-}
-
-.error-message {
-    color: red;
-    text-align: center;
-    font-size: 0.875rem;
-    margin-top: 10px;
-}
-
-input:focus, textarea:focus, select:focus {
-    border-color: #007BFF;
-    outline: none;
-    box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+    font-size: 20px;
+    margin-bottom: 0px;
 }
