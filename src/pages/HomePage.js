@@ -1,50 +1,39 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './HomePage.css';
-import * as pdfjs from 'pdfjs-dist/legacy/build/pdf';
-
-pdfjs.GlobalWorkerOptions.workerSrc = process.env.PUBLIC_URL + '/pdf.worker.js';
 
 function HomePage() {
-    const [file, setFile] = useState(null);
+    const [text, setText] = useState('');  // For directly inputting text
     const [selectedOption, setSelectedOption] = useState('');
-    const [responseText, setResponseText] = useState(''); // Added to capture response data
+    const [responseText, setResponseText] = useState('');
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
+    const handleTextChange = (e) => {
+        setText(e.target.value);
+    }
+
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                setText(event.target.result);
+            }
+            reader.readAsText(file);
+        }
     }
 
     const handleOptionChange = (e) => {
         setSelectedOption(e.target.value);
     }
 
-    // Function to extract text from uploaded PDF
-    const extractTextFromPDF = async (pdfFile) => {
-        const pdf = await pdfjs.getDocument({ url: URL.createObjectURL(pdfFile) }).promise;
-        let text = '';
-
-        for (let i = 0; i < pdf.numPages; i++) {
-            const page = await pdf.getPage(i + 1);
-            const content = await page.getTextContent();
-            text += content.items.map(item => item.str).join(' ');
-            console.log(`Page ${i + 1} content:`, content);
-        }
-
-        return text;
-    }
-
-    // Function to handle form submission
     const handleSubmit = async () => {
-        if (!file || !selectedOption) {
-            alert("Please select both a PDF file and an option.");
+        if (!text || !selectedOption) {
+            alert("Please provide text and select an option.");
             return;
         }
 
         try {
-            const pdfText = await extractTextFromPDF(file);
-
             const data = {
-                text: pdfText,
+                text: text,
                 choice: selectedOption
             };
 
@@ -55,7 +44,7 @@ function HomePage() {
                 withCredentials: true
             });
             console.log(response.data.response);
-            setResponseText(response.data.response); // Save response data to state
+            setResponseText(response.data.response);
         } catch (error) {
             console.error("Error fetching prompt:", error);
         }
@@ -64,8 +53,13 @@ function HomePage() {
     return (
         <div>
             <h1>Welcome to HomePage</h1>
-            <label>Upload PDF:</label>
-            <input type="file" accept=".pdf" onChange={handleFileChange} />
+
+            <label>Input Text:</label>
+            <textarea rows="10" cols="50" value={text} onChange={handleTextChange}></textarea>
+
+            <label>Or Upload Text File:</label>
+            <input type="file" accept=".txt" onChange={handleFileChange} />
+
             <label>Select an option:</label>
             <select onChange={handleOptionChange}>
                 <option value="">--Choose an option--</option>
@@ -77,7 +71,6 @@ function HomePage() {
             </select>
             <button onClick={handleSubmit}>Submit</button>
 
-            {/* Display response data */}
             <div className="response-section">
                 <h2>Response:</h2>
                 <p>{responseText}</p>
