@@ -3,6 +3,11 @@ import axios from 'axios';
 import { Button, Input, Select, Spin, Alert, Typography, Card } from 'antd';
 import * as pdfjsLib from 'pdfjs-dist/webpack';
 import Tesseract from 'tesseract.js';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+
 
 function HomePage() {
     const { Option } = Select;
@@ -14,7 +19,30 @@ function HomePage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [responseText, setResponseText] = useState("");
-    // const [inputText, setInputText] = useState("");
+
+    const downloadAsPDF = () => {
+        const element = document.getElementById("response-card-content").textContent;
+    
+        const documentDefinition = {
+            content: [
+                {
+                    text: 'Progress note and response:',
+                    fontSize: 20,
+                    bold: true,
+                    marginBottom: 20,
+                },
+                {
+                    text: element,
+                    fontSize: 12,
+                }
+            ],
+            pageSize: 'A4'
+        };
+    
+        pdfMake.createPdf(documentDefinition).download('response.pdf');
+    };
+    
+    
 
     const extractAllTextFromPDF = async (dataUrl) => {
         const loadingTask = pdfjsLib.getDocument(dataUrl);
@@ -52,7 +80,7 @@ function HomePage() {
     const handleFileChange = async (e) => {
         resetResponseText();
         setNotes([]);
-        // resetInputText();
+
         setIsLoading(true);
         setError(null);
         const files = Array.from(e.target.files);
@@ -88,9 +116,7 @@ function HomePage() {
         setResponseText("");
     };
 
-    // const resetInputText = () => {
-    //     setInputText("");
-    // };
+
 
     const handleSubmit = async () => {
         setIsLoading(true);
@@ -123,8 +149,9 @@ function HomePage() {
                 }
                 return `--- Response for Note ${(index + 1) / 2} ---\n${item}\n`; 
             }).join('\n');
-            
-            setResponseText(concatenatedResponses);
+    
+            const notesString = notes.join('\n');  // Convert the notes array into a single string
+            setResponseText(notesString + '\n' + concatenatedResponses);  // Prefix notes to the response
     
         } catch (error) {
             setError("There was an error processing your request. Please try again.");
@@ -137,47 +164,47 @@ function HomePage() {
         <div>
             {isLoading && <Spin size="large" />}
             {error && <Alert message={error} type="error" showIcon />}
-
+            
             <Title style={{ marginTop: '20px', marginBottom: '20px' }}>The Smartest Way to Elevate your Progress Notes</Title>
-
-
+            
             <div>
-            <label style={{ marginBottom: '20px' }}>Input Text:</label>
-
-            <TextArea 
-    rows="10" 
-    value={notes.map((note, index) => `--- Note ${index + 1} ---\n${note}\n`).join('\n')}
-
-    readOnly
-    style={{ marginBottom: '20px' }} // Add margin below the TextArea
-/>
-
-
-
+                <label style={{ marginBottom: '20px' }}>Input Text:</label>
+                <TextArea 
+                    rows="10" 
+                    value={notes.map((note, index) => `--- Note ${index + 1} ---\n${note}\n`).join('\n')}
+                    readOnly
+                    style={{ marginBottom: '20px' }}
+                />
             </div>
-
+            
             <label>Or Upload PDF Document:</label>
             <Input type="file" accept=".pdf" onChange={handleFileChange} multiple style={{ marginBottom: '20px' }} />
-
-
-
+            
             <label>What information would you like?:</label>
             <Select onChange={handleOptionChange} style={{ width: '100%' }}>
-                <Option value="">--Choose an option--</Option>
-                <Option value="1">Patient's diagnosis</Option>
-                <Option value="2">ICD10 and CPT Codes</Option>
-                <Option value="3">Medicare verbiage if the patient can benefit for physical therapy.</Option>
-                <Option value="4">Spell check of the progress note</Option>
-                <Option value="5">Care plan</Option>
-                <Option value="6">Medication discrepency</Option>
-            </Select>
+    <Option value="">--Choose an option--</Option>
+    <Option value="1">Patient's diagnosis</Option>
+    <Option value="2">ICD10 and CPT Codes</Option>
+    <Option value="3">Medicare verbiage if the patient can benefit for physical therapy.</Option>
+    <Option value="4">Spell check of the progress note</Option>
+    <Option value="5">Care plan</Option>
+    <Option value="6">Medication discrepancy</Option>
+</Select>
 
-            <Button type="primary" onClick={handleSubmit} style={{ marginTop: '8px' }}>Submit</Button>
+            
+<Button type="primary" onClick={handleSubmit} style={{ marginTop: '8px' }}>Submit</Button>
+
+{responseText && (
+    <Button onClick={downloadAsPDF} style={{ marginTop: '10px', marginLeft: '10px' }}>
+        Download as PDF
+    </Button>
+)}
 
 
-            <Card title="Response:" bordered={true} style={{ marginTop: '20px' }}>
-    <pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}>{responseText}</pre>
+<Card title="Response:" bordered={true} style={{ marginTop: '20px' }}>
+    <pre id="response-card-content" style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}>{responseText}</pre>
 </Card>
+
 
 
         </div>
