@@ -9,6 +9,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 
 
+
 function HomePage() {
     const { Option } = Select;
     const { TextArea } = Input;
@@ -26,7 +27,7 @@ function HomePage() {
         const documentDefinition = {
             content: [
                 {
-                    text: 'Progress note and response:',
+                    text: 'Response:',
                     fontSize: 20,
                     bold: true,
                     marginBottom: 20,
@@ -122,7 +123,7 @@ function HomePage() {
         setIsLoading(true);
         setError(null);
         resetResponseText();
-
+    
         if (notes.length === 0 || !selectedOption) {
             alert("Please upload files and select an option.");
             setIsLoading(false);
@@ -150,8 +151,7 @@ function HomePage() {
                 return `--- Response for Note ${(index + 1) / 2} ---\n${item}\n`; 
             }).join('\n');
     
-            const notesString = notes.join('\n');  // Convert the notes array into a single string
-            setResponseText(notesString + '\n' + concatenatedResponses);  // Prefix notes to the response
+            setResponseText(concatenatedResponses);  // Only set the response text
     
         } catch (error) {
             setError("There was an error processing your request. Please try again.");
@@ -159,6 +159,7 @@ function HomePage() {
     
         setIsLoading(false);
     }
+    
 
     return (
         <div>
@@ -167,15 +168,14 @@ function HomePage() {
             
             <Title style={{ marginTop: '20px', marginBottom: '20px' }}>The Smartest Way to Elevate your Progress Notes</Title>
             
-            <div>
-                <label style={{ marginBottom: '20px' }}>Input Text:</label>
-                <TextArea 
-                    rows="10" 
-                    value={notes.map((note, index) => `--- Note ${index + 1} ---\n${note}\n`).join('\n')}
-                    readOnly
-                    style={{ marginBottom: '20px' }}
-                />
-            </div>
+            <Card title="Input Text:" bordered={true} style={{ marginTop: '20px' }}>
+    <TextArea 
+        rows="10" 
+        value={notes.map((note, index) => `--- Note ${index + 1} ---\n${note}\n`).join('\n')}
+        readOnly
+    />
+</Card>
+
             
             <label>Or Upload PDF Document:</label>
             <Input type="file" accept=".pdf" onChange={handleFileChange} multiple style={{ marginBottom: '20px' }} />
