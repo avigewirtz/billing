@@ -14,6 +14,7 @@ function HomePage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [responseText, setResponseText] = useState("");
+    // const [inputText, setInputText] = useState("");
 
     const extractAllTextFromPDF = async (dataUrl) => {
         const loadingTask = pdfjsLib.getDocument(dataUrl);
@@ -46,8 +47,12 @@ function HomePage() {
     
         return combinedText;
     };
+    
 
     const handleFileChange = async (e) => {
+        resetResponseText();
+        setNotes([]);
+        // resetInputText();
         setIsLoading(true);
         setError(null);
         const files = Array.from(e.target.files);
@@ -79,10 +84,19 @@ function HomePage() {
         setSelectedOption(value);
     }
 
+    const resetResponseText = () => {
+        setResponseText("");
+    };
+
+    // const resetInputText = () => {
+    //     setInputText("");
+    // };
+
     const handleSubmit = async () => {
         setIsLoading(true);
         setError(null);
-    
+        resetResponseText();
+
         if (notes.length === 0 || !selectedOption) {
             alert("Please upload files and select an option.");
             setIsLoading(false);
@@ -133,9 +147,11 @@ function HomePage() {
             <TextArea 
     rows="10" 
     value={notes.map((note, index) => `--- Note ${index + 1} ---\n${note}\n`).join('\n')}
+
     readOnly
     style={{ marginBottom: '20px' }} // Add margin below the TextArea
 />
+
 
 
             </div>
