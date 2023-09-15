@@ -110,7 +110,7 @@ function HomePage() {
             {error && <div className="error">{error}</div>}
 
             <main>
-                <h1>The smartest way to elevate your progress notes</h1>
+                <h1>The Smartest Way to Elevate your Progress Notes</h1>
 
                 {notes.map((note, index) => (
                     <div key={index}>
@@ -119,16 +119,16 @@ function HomePage() {
                     </div>
                 ))}
 
-                <label>Or Upload Text File:</label>
+                <label>Or Upload PDF Document:</label>
                 <input type="file" accept=".pdf" onChange={handleFileChange} multiple />
 
-                <label>Select an option:</label>
+                <label>What information would you like?:</label>
                 <select onChange={handleOptionChange}>
                     <option value="">--Choose an option--</option>
-                    <option value="1">Diagnosis</option>
-                    <option value="2">ICD10 Codes</option>
-                    <option value="3">Medicare verbiage if the patient can benefit for physical therapy based off the patient's diagnoses.</option>
-                    <option value="4">Spell check</option>
+                    <option value="1">Patient's iagnosis</option>
+                    <option value="2">ICD10 and CPT Codes</option>
+                    <option value="3">Medicare verbiage if the patient can benefit for physical therapy.</option>
+                    <option value="4">Spell chec of the progress note</option>
                     <option value="5">Care plan</option>
                 </select>
 
