@@ -1,13 +1,13 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import './HomePage.css';
+// import { PDFDocument } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist/webpack';
 import Tesseract from 'tesseract.js';
 
 function HomePage() {
-    const [text, setText] = useState('');  
+    const [notes, setNotes] = useState([]); // each item is { text: "", response: "" }
     const [selectedOption, setSelectedOption] = useState('');
-    const [responseText, setResponseText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -21,12 +21,9 @@ function HomePage() {
             const page = await pdf.getPage(i);
             const textContent = await page.getTextContent();
     
-            // If the PDF has selectable text, use it
             if (textContent.items.length > 0) {
                 combinedText += textContent.items.map(item => item.str).join(' ') + "\n";
-            } 
-            // If not, fallback to OCR
-            else {
+            } else {
                 const canvas = document.createElement("canvas");
                 const viewport = page.getViewport({ scale: 1.5 });
                 const context = canvas.getContext("2d");
@@ -45,70 +42,65 @@ function HomePage() {
     
         return combinedText;
     };
-    
-
-    const handleTextChange = (e) => {
-        setText(e.target.value);
-    }
 
     const handleFileChange = async (e) => {
         setIsLoading(true);
         setError(null);
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = async function(event) {
-                try {
-                    if (file.name.endsWith('.pdf')) {
-                        const extractedText = await extractAllTextFromPDF(event.target.result);
-                        setText(extractedText);
-                    } else {
-                        setText(event.target.result);
-                    }
-                } catch (err) {
-                    console.error("Error processing the file:", err);
-                    setError("There was an error processing your file. Please ensure it's in the correct format and try again.");
-                } finally {
-                    setIsLoading(false); // Only set loading to false after processing the file
-                }
-            }
-            reader.readAsDataURL(file);
-        } else {
-            setIsLoading(false); // If no file selected, also set loading to false
-        }
+        const files = Array.from(e.target.files);
+        const newNotesPromises = files.map(file => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = async function(event) {
+                    const extractedText = await extractAllTextFromPDF(event.target.result);
+                    resolve({ text: extractedText, response: "" });
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        });
+
+        Promise.all(newNotesPromises).then(notesArray => {
+            setNotes(prevNotes => [...prevNotes, ...notesArray]);
+            setIsLoading(false);
+        }).catch(error => {
+            setError("There was an error processing your files. Please ensure they are in the correct format and try again.");
+            setIsLoading(false);
+        });
     }
-    
 
     const handleOptionChange = (e) => {
         setSelectedOption(e.target.value);
     }
 
+    const handleNoteChange = (e, index) => {
+        const updatedNotes = [...notes];
+        updatedNotes[index].text = e.target.value;
+        setNotes(updatedNotes);
+    }
+
     const handleSubmit = async () => {
         setIsLoading(true);
         setError(null);
-        if (!text || !selectedOption) {
-            alert("Please provide text and select an option.");
+
+        if (notes.length === 0 || !selectedOption) {
+            alert("Please upload files and select an option.");
             setIsLoading(false);
             return;
         }
 
-        try {
-            const data = {
-                text: text,
-                choice: selectedOption
-            };
+        const data = {
+            notes,
+            choice: selectedOption
+        };
 
-            const response = await axios.post('https://billing-automater-801d93465a2c.herokuapp.com/get-prompt', data, {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                withCredentials: true
-            });
-            setResponseText(response.data.response);
-        } catch (error) {
-            console.error("Error fetching prompt:", error);
-            setError("There was an error processing your request. Please try again.");
-        }
+        const response = await axios.post('https://billing-automater-801d93465a2c.herokuapp.com/get-prompt', data, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        });
+
+        setNotes(response.data.processedNotes);
         setIsLoading(false);
     }
 
@@ -120,11 +112,15 @@ function HomePage() {
             <main>
                 <h1>The smartest way to elevate your progress notes</h1>
 
-                <label>Input Text:</label>
-                <textarea key={Date.now()} rows="10" cols="50" value={text} onChange={handleTextChange}></textarea>
+                {notes.map((note, index) => (
+                    <div key={index}>
+                        <label>Input Text:</label>
+                        <textarea rows="10" cols="50" value={note.text} onChange={e => handleNoteChange(e, index)} />
+                    </div>
+                ))}
 
                 <label>Or Upload Text File:</label>
-                <input type="file" accept=".txt,.pdf" onChange={handleFileChange} />
+                <input type="file" accept=".pdf" onChange={handleFileChange} multiple />
 
                 <label>Select an option:</label>
                 <select onChange={handleOptionChange}>
@@ -135,13 +131,15 @@ function HomePage() {
                     <option value="4">Spell check</option>
                     <option value="5">Care plan</option>
                 </select>
-                <button onClick={handleSubmit}>Submit</button>
 
+                <button onClick={handleSubmit}>Submit</button>
                 <div className="response-section">
                     <h2>Response:</h2>
-                    <div className="output-box">
-                        <p>{responseText}</p>
-                    </div>
+                    {notes.map((note, index) => (
+                        <div key={index} className="output-box">
+                            <p>{note.response}</p>
+                        </div>
+                    ))}
                 </div>
             </main>
         </div>
