@@ -1,101 +1,121 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Button, Input, Select, Spin, Alert, Typography, Card } from 'antd';
-import * as pdfjsLib from 'pdfjs-dist/webpack';
-import Tesseract from 'tesseract.js';
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 
 
 
-function HomePage() {
-    const { Option } = Select;
-    const { TextArea } = Input;
-    const { Title } = Typography;
-
-    const [notes, setNotes] = useState([]);
-    const [selectedOption, setSelectedOption] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [responseText, setResponseText] = useState("");
-
-    const downloadAsPDF = () => {
-        const element = document.getElementById("response-card-content").textContent;
+    import React, { useState } from 'react';
+    import axios from 'axios';
+    import { Button, Input, Select, Spin, Alert, Typography, Card } from 'antd';
+    import * as pdfjsLib from 'pdfjs-dist/webpack';
+    import Tesseract from 'tesseract.js';
+    import pdfMake from "pdfmake/build/pdfmake";
+    import { PDFDocument } from 'pdf-lib';
+    import pdfFonts from "pdfmake/build/vfs_fonts";
+    pdfMake.vfs = pdfFonts.pdfMake.vfs;
     
-        const documentDefinition = {
-            content: [
-                {
-                    text: 'Response:',
-                    fontSize: 20,
-                    bold: true,
-                    marginBottom: 20,
-                },
-                {
-                    text: element,
-                    fontSize: 12,
+    function HomePage() {
+        const { Option } = Select;
+        const { TextArea } = Input;
+        const { Title } = Typography;
+    
+        const [notes, setNotes] = useState([]);
+        const [selectedOption, setSelectedOption] = useState('');
+        const [isLoading, setIsLoading] = useState(false);
+        const [error, setError] = useState(null);
+        const [responseText, setResponseText] = useState("");
+        const [originalPdfDataUrls, setOriginalPdfDataUrls] = useState([]);
+    
+        const downloadAsPDF = async () => {
+            // Create a new PDF
+            const newPdfDoc = await PDFDocument.create();
+        
+            for (let url of originalPdfDataUrls) {
+                const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer());
+                const existingPdfDoc = await PDFDocument.load(existingPdfBytes);
+                
+                // Import all pages from the existing PDF
+                const copiedPages = await newPdfDoc.copyPages(existingPdfDoc, existingPdfDoc.getPageIndices());
+                copiedPages.forEach(page => newPdfDoc.addPage(page));
+            }
+        
+            // Append the response text to the end
+            const page = newPdfDoc.addPage();
+            const { height } = page.getSize();
+            const element = document.getElementById("response-card-content").textContent;
+            page.drawText('Response:', {
+                x: 50,
+                y: height - 100,
+                size: 20,
+            });
+            page.drawText(element, {
+                x: 50,
+                y: height - 150,
+                size: 12,
+            });
+        
+            const pdfBytes = await newPdfDoc.save();
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'merged-response.pdf';
+            link.click();
+        };
+        
+    
+        const extractAllTextFromPDF = async (dataUrl) => {
+            const loadingTask = pdfjsLib.getDocument(dataUrl);
+            const pdf = await loadingTask.promise;
+        
+            let combinedText = '';
+        
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+        
+                if (textContent.items.length > 0) {
+                    combinedText += textContent.items.map(item => item.str).join(' ') + "\n";
+                } else {
+                    const canvas = document.createElement("canvas");
+                    const viewport = page.getViewport({ scale: 1.5 });
+                    const context = canvas.getContext("2d");
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+        
+                    await page.render({
+                        canvasContext: context,
+                        viewport: viewport
+                    }).promise;
+        
+                    const result = await Tesseract.recognize(canvas);
+                    combinedText += result.data.text + "\n";
                 }
-            ],
-            pageSize: 'A4'
+            }
+        
+            return combinedText;
         };
     
-        pdfMake.createPdf(documentDefinition).download('response.pdf');
-    };
+        const handleFileChange = async (e) => {
+            resetResponseText();
+            setNotes([]);
+            setOriginalPdfDataUrls([]); // Reset on new upload
     
-    
-
-    const extractAllTextFromPDF = async (dataUrl) => {
-        const loadingTask = pdfjsLib.getDocument(dataUrl);
-        const pdf = await loadingTask.promise;
-    
-        let combinedText = '';
-    
-        for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const textContent = await page.getTextContent();
-    
-            if (textContent.items.length > 0) {
-                combinedText += textContent.items.map(item => item.str).join(' ') + "\n";
-            } else {
-                const canvas = document.createElement("canvas");
-                const viewport = page.getViewport({ scale: 1.5 });
-                const context = canvas.getContext("2d");
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
-    
-                await page.render({
-                    canvasContext: context,
-                    viewport: viewport
-                }).promise;
-    
-                const result = await Tesseract.recognize(canvas);
-                combinedText += result.data.text + "\n";
-            }
-        }
-    
-        return combinedText;
-    };
-    
-
-    const handleFileChange = async (e) => {
-        resetResponseText();
-        setNotes([]);
-
-        setIsLoading(true);
-        setError(null);
-        const files = Array.from(e.target.files);
-        const newNotesPromises = files.map(file => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = async function(event) {
-                    const extractedText = await extractAllTextFromPDF(event.target.result);
-                    resolve(`--- Start of Note from ${file.name} ---\n${extractedText}\n`);
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
+            setIsLoading(true);
+            setError(null);
+            const files = Array.from(e.target.files);
+            const newNotesPromises = files.map(file => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = async function(event) {
+                        const currentPdfDataUrl = event.target.result;
+                        setOriginalPdfDataUrls(prevDataUrls => [...prevDataUrls, currentPdfDataUrl]);
+                        const extractedText = await extractAllTextFromPDF(currentPdfDataUrl);
+                        resolve(`--- Start of Note from ${file.name} ---\n${extractedText}\n`);
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
             });
-        });
+    
+            // [Rest of the function stays the samee
     
         Promise.all(newNotesPromises).then(notesArray => {
             // Here's the change. We are directly setting the state to the new notes array
@@ -161,6 +181,30 @@ function HomePage() {
     }
     
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     return (
         <div>
             {isLoading && <Spin size="large" />}
@@ -172,12 +216,12 @@ function HomePage() {
     <TextArea 
         rows="10" 
         value={notes.map((note, index) => `--- Note ${index + 1} ---\n${note}\n`).join('\n')}
-        readOnly
+        // readOnly
     />
 </Card>
 
             
-            <label>Or Upload PDF Document:</label>
+            <label>Upload PDF Document:</label>
             <Input type="file" accept=".pdf" onChange={handleFileChange} multiple style={{ marginBottom: '20px' }} />
             
             <label>What information would you like?:</label>
@@ -186,7 +230,7 @@ function HomePage() {
     <Option value="1">Patient's diagnosis</Option>
     <Option value="2">ICD10 and CPT Codes</Option>
     <Option value="3">Medicare verbiage if the patient can benefit for physical therapy.</Option>
-    <Option value="4">Spell check of the progress note</Option>
+    <Option value="4">Spell check</Option>
     <Option value="5">Care plan</Option>
     <Option value="6">Medication discrepancy</Option>
 </Select>
