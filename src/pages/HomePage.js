@@ -4,7 +4,7 @@
 
     import React, { useState } from 'react';
     import axios from 'axios';
-    import { Button, Input, Select, Spin, Alert, Typography, Card } from 'antd';
+    import { Spin, Alert, Typography, Input, Select, Button, Card, Space, Layout} from 'antd';
     import * as pdfjsLib from 'pdfjs-dist/webpack';
     import Tesseract from 'tesseract.js';
     import pdfMake from "pdfmake/build/pdfmake";
@@ -13,9 +13,9 @@
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
     
     function HomePage() {
-        const { Option } = Select;
-        const { TextArea } = Input;
         const { Title } = Typography;
+        const { Option } = Select;
+        const { Content } = Layout;
     
         const [notes, setNotes] = useState([]);
         const [selectedOption, setSelectedOption] = useState('');
@@ -182,50 +182,24 @@
     
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     return (
-        <div>
-            {isLoading && <Spin size="large" />}
-            {error && <Alert message={error} type="error" showIcon />}
-            
-            <Title style={{ marginTop: '20px', marginBottom: '20px' }}>The Smartest Way to Elevate your Progress Notes</Title>
-            
-            <Card title="Input Text:" bordered={true} style={{ marginTop: '20px' }}>
-    <TextArea 
-        rows="10" 
-        value={notes.map((note, index) => `--- Note ${index + 1} ---\n${note}\n`).join('\n')}
-        // readOnly
-    />
-</Card>
 
+        <Layout>
+        <Content style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
+
+        <Space direction="vertical" size={20}>
+        {isLoading && <Spin size="large" />}
+        {error && <Alert message={error} type="error" showIcon />}
+        
+        <Title level={2}>
+            The Smartest Way to Elevate your Progress Notes
+        </Title>
             
-            <label>Upload PDF Document:</label>
-            <Input type="file" accept=".pdf" onChange={handleFileChange} multiple style={{ marginBottom: '20px' }} />
+        <label>Upload Progress Note(s):</label>
+        <Input type="file" accept=".pdf" onChange={handleFileChange} multiple />
             
-            <label>What information would you like?:</label>
-            <Select onChange={handleOptionChange} style={{ width: '100%' }}>
+        <label>What information would you like?</label>
+        <Select onChange={handleOptionChange} style={{ width: '100%' }}>
     <Option value="">--Choose an option--</Option>
     <Option value="1">Patient's diagnosis</Option>
     <Option value="2">ICD10 and CPT Codes</Option>
@@ -233,25 +207,24 @@
     <Option value="4">Spell check</Option>
     <Option value="5">Care plan</Option>
     <Option value="6">Medication discrepancy</Option>
-</Select>
+    </Select>
 
-            
-<Button type="primary" onClick={handleSubmit} style={{ marginTop: '8px' }}>Submit</Button>
+<Space>
+    <Button type="primary" onClick={handleSubmit}>Submit</Button>
+    {responseText && (
+        <Button onClick={downloadAsPDF}>
+            Download as PDF
+        </Button>
+    )}
+</Space>
 
-{responseText && (
-    <Button onClick={downloadAsPDF} style={{ marginTop: '10px', marginLeft: '10px' }}>
-        Download as PDF
-    </Button>
-)}
-
-
-<Card title="Response:" bordered={true} style={{ marginTop: '20px' }}>
+<Card title="Response:" bordered={true}>
     <pre id="response-card-content" style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}>{responseText}</pre>
 </Card>
+</Space>
 
-
-
-        </div>
+</Content>
+    </Layout>
     );
 }
 
