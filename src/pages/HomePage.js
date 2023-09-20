@@ -184,7 +184,7 @@
 
     return (
 
-        <Layout>
+    
         <Content style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
 
         <Space direction="vertical" size={20}>
@@ -224,7 +224,7 @@
 </Space>
 
 </Content>
-    </Layout>
+  
     );
 }
 
