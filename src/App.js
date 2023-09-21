@@ -5,7 +5,7 @@ import Tesseract from 'tesseract.js';
 import pdfMake from "pdfmake/build/pdfmake";
 import { PDFDocument } from 'pdf-lib';
 import pdfFonts from "pdfmake/build/vfs_fonts";
-
+// import { BrowserRouter as Router } from 'react-router-dom';
 import {
   ChakraProvider, Spinner, Flex, Box, Heading, Button, Input, Select, Text, FormControl, FormLabel
 } from '@chakra-ui/react';
