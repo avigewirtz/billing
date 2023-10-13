@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as pdfjsLib from 'pdfjs-dist/webpack';
 import Tesseract from 'tesseract.js';
 import pdfMake from "pdfmake/build/pdfmake";
-import { PDFDocument } from 'pdf-lib';
+// import { PDFDocument } from 'pdf-lib';
 import pdfFonts from "pdfmake/build/vfs_fonts";
 // import { BrowserRouter as Router } from 'react-router-dom';
 import {
@@ -17,48 +17,13 @@ function App() {
   const [selectedOption, setSelectedOption] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [responseText, setResponseText] = useState("");
-  const [originalPdfDataUrls, setOriginalPdfDataUrls] = useState([]);
+  const [responseText, setResponseText] = useState([]);
+
+  // const [originalPdfDataUrls, setOriginalPdfDataUrls] = useState([]);
+  const [setOriginalPdfDataUrls] = useState([]);
 
 
-  const downloadAsPDF = async () => {
-      // Create a new PDF
-      const newPdfDoc = await PDFDocument.create();
-  
-      for (let url of originalPdfDataUrls) {
-          const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer());
-          const existingPdfDoc = await PDFDocument.load(existingPdfBytes);
-          
-          // Import all pages from the existing PDF
-          const copiedPages = await newPdfDoc.copyPages(existingPdfDoc, existingPdfDoc.getPageIndices());
-          copiedPages.forEach(page => newPdfDoc.addPage(page));
-      }
-  
-      // Append the response text to the end
-      const page = newPdfDoc.addPage();
-      const { height } = page.getSize();
-      const element = document.getElementById("response-card-content").textContent;
-      page.drawText('Response:', {
-          x: 50,
-          y: height - 100,
-          size: 20,
-      });
-      const maxWidth = page.getWidth() - 40;  // Assuming 20 units of margin on both sides
-page.drawText(element, {
-    x: 20,
-    y: height - 150,
-    size: 12,
-    maxWidth: maxWidth
-});
 
-  
-      const pdfBytes = await newPdfDoc.save();
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'merged-response.pdf';
-      link.click();
-  };
   
 
   const extractAllTextFromPDF = async (dataUrl) => {
@@ -145,40 +110,35 @@ const handleSubmit = async () => {
   resetResponseText();
 
   if (notes.length === 0 || !selectedOption) {
-      alert("Please upload files and select an option.");
-      setIsLoading(false);
-      return;
+    alert("Please upload files and select an option.");
+    setIsLoading(false);
+    return;
   }
 
   const data = {
-      notes,
-      choice: selectedOption
+    notes,
+    choice: selectedOption
   };
 
   try {
-      const response = await axios.post('https://billing-automater-801d93465a2c.herokuapp.com/get-prompt', data, {
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          withCredentials: true
-      });
-
-      const processedResponses = response.data.processedNotes;
-      const concatenatedResponses = processedResponses.map((item, index) => {
-          if (index % 2 === 0) {
-              return ''; 
-          }
-          return `--- Response for Note ${(index + 1) / 2} ---\n${item}\n`; 
-      }).join('\n');
-
-      setResponseText(concatenatedResponses);  // Only set the response text
+    // Update this line to use your Netlify function URL.
+    const response = await axios.post('/.netlify/functions/openAI', data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    // Directly save the array into the state
+    setResponseText(response.data.processedNotes);
+    
 
   } catch (error) {
-      setError("There was an error processing your request. Please try again.");
+    setError("There was an error processing your request. Please try again.");
   }
 
   setIsLoading(false);
 }
+
 
 return (
   <ChakraProvider>
@@ -234,21 +194,20 @@ return (
 
           </Box>
 
-          {responseText && (
+          {responseText.length > 0 && (
   <Box mt={4}>
     <Heading as="h3">Response(s):</Heading>
     <Box bg="gray.100" p={4} rounded="md" mt={2} overflowY="auto" overflowX="hidden" maxHeight="400px">
-    <pre id="response-card-content" style={{ whiteSpace: "pre-wrap" }}>{responseText}</pre>
-
+      {responseText.map((text, index) => (
+        <pre key={index} id={`response-card-content-${index}`} style={{ whiteSpace: "pre-wrap" }}>
+          {`--- Response for ${index + 1} ---\n${text}\n`}
+        </pre>
+      ))}
     </Box>
   </Box>
 )}
 
-{responseText && (
-  <Flex justifyContent="center" mt={4}>  {/* Added marginTop for some spacing */}
-    <Button colorScheme="green" onClick={downloadAsPDF}>Download as PDF</Button>
-  </Flex>
-)}
+
         </form>
       </Box>
 
