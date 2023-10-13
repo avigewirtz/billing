@@ -105,6 +105,9 @@ const resetResponseText = () => {
 
 
 const handleSubmit = async () => {
+  console.log("Notes state:", notes);  // Debugging line
+  console.log("Selected Option:", selectedOption); // Debugging line
+
   setIsLoading(true);
   setError(null);
   resetResponseText();
