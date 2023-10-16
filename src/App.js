@@ -168,7 +168,8 @@ return (
   bg="gray.50"         // Set background color to a light blue from Chakra UI theme
   border="2px solid"    // Set border width to 2 pixels and style to solid
   borderColor="blue.500" // Set border color to a darker blue from Chakra UI theme
-  borderRadius="md"     // Set border radius to a medium value from Chakra UI theme
+  borderRadius="md" 
+  marginBottom="100px"    // Set border radius to a medium value from Chakra UI theme
 >
 {isLoading && (
   <Flex justifyContent="center" mt={4}>  {/* Added marginTop for some spacing */}
@@ -209,16 +210,32 @@ return (
           </Box>
           {responseText.length > 0 && (
   <Box mt={4}>
-    <Heading as="h3">Response(s):</Heading>
-    <Box bg="gray.100" p={4} rounded="md" mt={2} overflowY="auto" overflowX="hidden" maxHeight="400px">
-      {responseText.map((text, index) => (
-        <pre key={index} id={`response-card-content-${index}`} style={{ whiteSpace: "pre-wrap" }}>
-          {`\n--- Response for ${noteNames[index]} ---\n\n${text}\n`}  {/* Added an extra \n at the end */}
-        </pre>
-      ))}
-    </Box>
+    {/* <Heading as="h3" style={{ marginBottom: '16px' }}>Response</Heading> */}
+    {responseText.map((text, index) => (
+      <>
+        <Text style={{ marginTop: '16px', fontWeight: 'bold', fontSize: '16px' }}>
+  Response for {noteNames[index]}
+</Text>
+
+        <Box 
+          bg="gray.100" 
+          p={4} 
+          rounded="md" 
+          mt={2} 
+          overflowY="auto" 
+          overflowX="hidden" 
+          maxHeight="400px"
+          key={index}
+        >
+          <pre id={`response-card-content-${index}`} style={{ whiteSpace: "pre-wrap" }}>
+            {`${text}\n\n`}
+          </pre>
+        </Box>
+      </>
+    ))}
   </Box>
 )}
+
 
 
 
