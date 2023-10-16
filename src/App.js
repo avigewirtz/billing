@@ -18,6 +18,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [responseText, setResponseText] = useState([]);
+  const [noteNames, setNoteNames] = useState([]);
+
   // eslint-disable-next-line no-unused-vars
 const [originalPdfDataUrls, setOriginalPdfDataUrls] = useState([]);
 
@@ -83,6 +85,8 @@ const [originalPdfDataUrls, setOriginalPdfDataUrls] = useState([]);
   Promise.all(newNotesPromises).then(notesArray => {
       // Here's the change. We are directly setting the state to the new notes array
       // instead of spreading the previous notes with the new ones.
+      const newNoteNames = files.map(file => file.name);
+      setNoteNames(newNoteNames);
       setNotes(notesArray);
       setIsLoading(false);
   }).catch(error => {
@@ -195,19 +199,21 @@ return (
 
 
           </Box>
-
           {responseText.length > 0 && (
   <Box mt={4}>
     <Heading as="h3">Response(s):</Heading>
     <Box bg="gray.100" p={4} rounded="md" mt={2} overflowY="auto" overflowX="hidden" maxHeight="400px">
       {responseText.map((text, index) => (
         <pre key={index} id={`response-card-content-${index}`} style={{ whiteSpace: "pre-wrap" }}>
-          {`--- Response for ${index + 1} ---\n${text}\n`}
+          {`--- Response for ${noteNames[index]} ---\n${text}\n\n`}  {/* Added an extra \n at the end */}
         </pre>
       ))}
     </Box>
   </Box>
 )}
+
+
+
 
 
         </form>
