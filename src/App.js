@@ -68,7 +68,7 @@ const [originalPdfDataUrls, setOriginalPdfDataUrls] = useState([]);
       const files = Array.from(e.target.files);
 
       if (files.length > 10) {
-        setError("You can upload a maximum of 10 files.");
+        setError("You can upload a maximum of 10 files at a time.");
         setIsLoading(false);
         return;
       }
