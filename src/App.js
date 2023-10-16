@@ -183,7 +183,7 @@ return (
         
         <form onSubmit={e => { e.preventDefault(); handleSubmit(); }}>
           <FormControl id="file-upload" mt={4}>
-          <FormLabel fontWeight="bold">Upload Progress Note(s):</FormLabel>
+          <FormLabel fontWeight="bold">Upload Progress Note(s) (maximum 10):</FormLabel>
 
             <Input type="file" accept=".pdf" onChange={handleFileChange} multiple />
           </FormControl>
