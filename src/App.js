@@ -213,7 +213,7 @@ return (
     <Box bg="gray.100" p={4} rounded="md" mt={2} overflowY="auto" overflowX="hidden" maxHeight="400px">
       {responseText.map((text, index) => (
         <pre key={index} id={`response-card-content-${index}`} style={{ whiteSpace: "pre-wrap" }}>
-          {`--- Response for ${noteNames[index]} ---\n\n${text}\n\n`}  {/* Added an extra \n at the end */}
+          {`\n\n--- Response for ${noteNames[index]} ---\n\n${text}`}  {/* Added an extra \n at the end */}
         </pre>
       ))}
     </Box>
