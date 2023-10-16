@@ -178,7 +178,8 @@ return (
 
         {error && <Text color="red.500">Error: {error}</Text>}
         
-        <Heading as="h2" my={4}>Elevate your Progress Notes</Heading>
+        <Heading as="h2" my={4} textAlign="center">Elevate Your Progress Notes</Heading>
+
         
         <form onSubmit={e => { e.preventDefault(); handleSubmit(); }}>
           <FormControl id="file-upload" mt={4}>
