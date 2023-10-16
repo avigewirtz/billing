@@ -18,19 +18,13 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [responseText, setResponseText] = useState([]);
-
-  // const [originalPdfDataUrls, setOriginalPdfDataUrls] = useState([]);
-  const [setOriginalPdfDataUrls] = useState([]);
-
-
-
-  
+  const [originalPdfDataUrls, setOriginalPdfDataUrls] = useState([]);
 
   const extractAllTextFromPDF = async (dataUrl) => {
       const loadingTask = pdfjsLib.getDocument(dataUrl);
       const pdf = await loadingTask.promise;
   
-      let combinedText = '';
+      let combinedText = '';  
   
       for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
@@ -168,7 +162,7 @@ return (
 
         {error && <Text color="red.500">Error: {error}</Text>}
         
-        <Heading as="h2" my={4}>The Smartest Way to Elevate your Progress Notes</Heading>
+        <Heading as="h2" my={4}>Elevate your Progress Notes</Heading>
         
         <form onSubmit={e => { e.preventDefault(); handleSubmit(); }}>
           <FormControl id="file-upload" mt={4}>
