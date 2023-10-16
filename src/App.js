@@ -123,11 +123,12 @@ const handleSubmit = async () => {
 
   try {
     // Update this line to use your Netlify function URL.
-    const response = await axios.post('/.netlify/functions/openAI', data, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await axios.post('https://billing-automater-801d93465a2c.herokuapp.com/get-prompt', data, {
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          withCredentials: true
+      });
     
     // Directly save the array into the state
     setResponseText(response.data.processedNotes);
