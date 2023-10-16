@@ -66,6 +66,13 @@ const [originalPdfDataUrls, setOriginalPdfDataUrls] = useState([]);
       setIsLoading(true);
       setError(null);
       const files = Array.from(e.target.files);
+      
+      if (files.length > 10) {
+        setError("You can upload a maximum of 10 files.");
+        setIsLoading(false);
+        return;
+      }
+    
       const newNotesPromises = files.map(file => {
           return new Promise((resolve, reject) => {
               const reader = new FileReader();
