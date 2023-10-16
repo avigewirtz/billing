@@ -18,7 +18,11 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [responseText, setResponseText] = useState([]);
-  const [originalPdfDataUrls, setOriginalPdfDataUrls] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+const [originalPdfDataUrls, setOriginalPdfDataUrls] = useState([]);
+
+
+
 
   const extractAllTextFromPDF = async (dataUrl) => {
       const loadingTask = pdfjsLib.getDocument(dataUrl);
