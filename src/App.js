@@ -133,7 +133,7 @@ const handleSubmit = async () => {
 
   const data = {
     notes,
-    choices: selectedOption // "choices" is now an array
+    choices: selectedOption 
   };
   
 
@@ -198,14 +198,17 @@ return (
           <FormLabel fontWeight="bold">Choose one or more options below</FormLabel>
        
 
-  <CheckboxGroup onChange={handleOptionChange}>
+          <CheckboxGroup onChange={handleOptionChange}>
+  <Flex direction="column">
     <Checkbox value="1">Patient's diagnosis</Checkbox>
     <Checkbox value="2">ICD10 and CPT Codes</Checkbox>
     <Checkbox value="3">Medicare verbiage if the patient can benefit for physical therapy.</Checkbox>
     <Checkbox value="4">Spell check</Checkbox>
     <Checkbox value="5">Care plan</Checkbox>
     <Checkbox value="6">Medication discrepancy</Checkbox>
-  </CheckboxGroup>
+  </Flex>
+</CheckboxGroup>
+
 </FormControl>
 
           
