@@ -139,7 +139,7 @@ const handleSubmit = async () => {
 
   try {
     // Update this line to use your Netlify function URL.
-    const response = await axios.post('https://billing-automater-801d93465a2c.herokuapp.com/get-prompt', data, {
+    const response = await axios.post('/api/get-prompt', data, {
           headers: {
               'Content-Type': 'application/json'
           },

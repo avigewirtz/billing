@@ -1,0 +1,2 @@
+# Proxy requests to /api/ to your Heroku app
+/api/*  https://billing-automater-801d93465a2c.herokuapp.com/:splat  200
