@@ -82,14 +82,14 @@ const [originalPdfDataUrls, setOriginalPdfDataUrls] = useState([]);
                   const currentPdfDataUrl = event.target.result;
                   setOriginalPdfDataUrls(prevDataUrls => [...prevDataUrls, currentPdfDataUrl]);
                   const extractedText = await extractAllTextFromPDF(currentPdfDataUrl);
-                  resolve(`--- Start of Note from ${file.name} ---\n${extractedText}\n`);
+                  resolve(`${extractedText}\n`);
               };
               reader.onerror = reject;
               reader.readAsDataURL(file);
           });
       });
 
-      // [Rest of the function stays the samee
+    
 
   Promise.all(newNotesPromises).then(notesArray => {
       // Here's the change. We are directly setting the state to the new notes array
