@@ -202,7 +202,7 @@ return (
   <Flex direction="column">
     <Checkbox value="1">Patient's diagnosis</Checkbox>
     <Checkbox value="2">ICD10 and CPT Codes</Checkbox>
-    <Checkbox value="3">Medicare verbiage if the patient can benefit for physical therapy.</Checkbox>
+    <Checkbox value="3">Medicare verbiage if the patient can benefit from physical therapy</Checkbox>
     <Checkbox value="4">Spell check</Checkbox>
     <Checkbox value="5">Care plan</Checkbox>
     <Checkbox value="6">Medication discrepancy</Checkbox>
