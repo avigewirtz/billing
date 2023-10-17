@@ -7,18 +7,20 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 // import { BrowserRouter as Router } from 'react-router-dom';
 import {
-  ChakraProvider, Spinner, Flex, Box, Heading, Button, Input, Select, Text, FormControl, FormLabel
+  ChakraProvider, Checkbox, Spinner, Flex, Box, Heading, Button, Input, Text, FormControl, CheckboxGroup, FormLabel
 } from '@chakra-ui/react';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 function App() {
   const [notes, setNotes] = useState([]);
-  const [selectedOption, setSelectedOption] = useState('');
+  // const [selectedOption, setSelectedOption] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [responseText, setResponseText] = useState([]);
   const [noteNames, setNoteNames] = useState([]);
+  const [selectedOption, setSelectedOption] = useState([]);
+
 
   // eslint-disable-next-line no-unused-vars
 const [originalPdfDataUrls, setOriginalPdfDataUrls] = useState([]);
@@ -103,9 +105,11 @@ const [originalPdfDataUrls, setOriginalPdfDataUrls] = useState([]);
 }
 
 
-const handleOptionChange = (value) => {
-  setSelectedOption(value);
-}
+const handleOptionChange = (values) => {
+  setSelectedOption(values);
+};
+
+
 
 const resetResponseText = () => {
   setResponseText("");
@@ -129,8 +133,9 @@ const handleSubmit = async () => {
 
   const data = {
     notes,
-    choice: selectedOption
+    choices: selectedOption // "choices" is now an array
   };
+  
 
   try {
     // Update this line to use your Netlify function URL.
@@ -190,16 +195,20 @@ return (
           </FormControl>
 
           <FormControl id="info-selection" mt={4}>
-          <FormLabel fontWeight="bold">What information would you like?</FormLabel>
-            <Select placeholder="--Choose an option--" onChange={(e) => handleOptionChange(e.target.value)}>
-              <option value="1">Patient's diagnosis</option>
-              <option value="2">ICD10 and CPT Codes</option>
-              <option value="3">Medicare verbiage if the patient can benefit for physical therapy.</option>
-              <option value="4">Spell check</option>
-              <option value="5">Care plan</option>
-              <option value="6">Medication discrepancy</option>
-            </Select>
-          </FormControl>
+          <FormLabel fontWeight="bold">Choose one or more options below</FormLabel>
+       
+
+  <CheckboxGroup onChange={handleOptionChange}>
+    <Checkbox value="1">Patient's diagnosis</Checkbox>
+    <Checkbox value="2">ICD10 and CPT Codes</Checkbox>
+    <Checkbox value="3">Medicare verbiage if the patient can benefit for physical therapy.</Checkbox>
+    <Checkbox value="4">Spell check</Checkbox>
+    <Checkbox value="5">Care plan</Checkbox>
+    <Checkbox value="6">Medication discrepancy</Checkbox>
+  </CheckboxGroup>
+</FormControl>
+
+          
           
           <Box mt={4}>
           <Flex justifyContent="center" mt={4}>  {/* Added marginTop for some spacing */}
