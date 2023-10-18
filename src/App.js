@@ -122,15 +122,16 @@ const handleSubmit = async () => {
   console.log("Notes state:", notes);  // Debugging line
   console.log("Selected Option:", selectedOption); // Debugging line
 
-  setIsLoading(true);
+  
   setError(null);
   resetResponseText();
 
   if (notes.length === 0 || !selectedOption) {
     alert("Please upload files and select an option.");
-    setIsLoading(false);
     return;
   }
+
+  setIsLoading(true);
 
   const data = {
     notes,
@@ -153,18 +154,23 @@ const handleSubmit = async () => {
     taskIds.forEach((taskId, index) => {
       const intervalId = setInterval(async () => {
         const resultResponse = await axios.get(`/api/get-result/${taskId}`);
+        console.log("Result Response: ", resultResponse.data);
         
         if (resultResponse.data.status === 'READY') {
           clearInterval(intervalId);  // Stop polling this task ID
           completedResults[index] = resultResponse.data.result;  // Store the result in the temporary array
-
-          // Check if all tasks are complete
-          if (completedResults.length === taskIds.length && !completedResults.includes(undefined)) {
+          console.log(`Task ${taskId} completed.`);
+      
+          const isAllTasksComplete = completedResults.length === taskIds.length && !completedResults.includes(undefined);
+          console.log("Is All Tasks Complete?", isAllTasksComplete);
+      
+          if (isAllTasksComplete) {
             setIsLoading(false);
             setResponseText(completedResults);  // Update state once all tasks are complete
           }
         }
       }, 5000);  // Poll every 5 seconds
+      
     });
   } catch (error) {
     setError("There was an error processing your request. Please try again.");
@@ -220,7 +226,7 @@ return (
   <Flex direction="column">
     <Checkbox value="1">Patient's diagnosis</Checkbox>
     <Checkbox value="2">ICD10 and CPT Codes</Checkbox>
-    <Checkbox value="3">Medicare verbiage if the patient can benefit from physical therapy.</Checkbox>
+    <Checkbox value="3">Medicare verbiage if the patient can benefit from physical therapy</Checkbox>
     <Checkbox value="4">Spell check</Checkbox>
     <Checkbox value="5">Care plan</Checkbox>
     <Checkbox value="6">Medication discrepancy</Checkbox>
