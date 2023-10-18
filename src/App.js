@@ -156,7 +156,7 @@ const handleSubmit = async () => {
         const resultResponse = await axios.get(`/api/get-result/${taskId}`);
         console.log("Result Response: ", resultResponse.data);
         
-        if (resultResponse.data.status === 'READY') {
+        if (resultResponse.data.status === 'SUCCESS') {
           clearInterval(intervalId);  // Stop polling this task ID
           completedResults[index] = resultResponse.data.result;  // Store the result in the temporary array
           console.log(`Task ${taskId} completed.`);
