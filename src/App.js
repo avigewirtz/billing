@@ -136,28 +136,43 @@ const handleSubmit = async () => {
     notes,
     choices: selectedOption 
   };
-  
 
   try {
-    // Update this line to use your Netlify function URL.
     const response = await axios.post('/api/get-prompt', data, {
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          withCredentials: true
-      });
-    
-    // Directly save the array into the state
-    console.log(response.data);  // Debugging line
-    setResponseText(response.data.processedNotes);
-    
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      withCredentials: true
+    });
 
+    console.log(response.data);  // Debugging line
+
+    const taskIds = response.data.task_ids;  // Assuming the backend sends this as 'task_ids'
+    const completedResults = [];  // Temporary array to hold completed results
+
+    taskIds.forEach((taskId, index) => {
+      const intervalId = setInterval(async () => {
+        const resultResponse = await axios.get(`/api/get-result/${taskId}`);
+        
+        if (resultResponse.data.status === 'READY') {
+          clearInterval(intervalId);  // Stop polling this task ID
+          completedResults[index] = resultResponse.data.result;  // Store the result in the temporary array
+
+          // Check if all tasks are complete
+          if (completedResults.length === taskIds.length && !completedResults.includes(undefined)) {
+            setResponseText(completedResults);  // Update state once all tasks are complete
+          }
+        }
+      }, 5000);  // Poll every 5 seconds
+    });
   } catch (error) {
     setError("There was an error processing your request. Please try again.");
   }
 
+
   setIsLoading(false);
-}
+};
+
 
 
 return (
