@@ -3,6 +3,7 @@ import axios from 'axios';
 import * as pdfjsLib from 'pdfjs-dist/webpack';
 import Tesseract from 'tesseract.js';
 import pdfMake from "pdfmake/build/pdfmake";
+
 // import { PDFDocument } from 'pdf-lib';
 import pdfFonts from "pdfmake/build/vfs_fonts";
 // import { BrowserRouter as Router } from 'react-router-dom';
@@ -147,6 +148,7 @@ const handleSubmit = async () => {
       });
     
     // Directly save the array into the state
+    console.log(response.data);  // Debugging line
     setResponseText(response.data.processedNotes);
     
 
@@ -202,7 +204,7 @@ return (
   <Flex direction="column">
     <Checkbox value="1">Patient's diagnosis</Checkbox>
     <Checkbox value="2">ICD10 and CPT Codes</Checkbox>
-    <Checkbox value="3">Medicare verbiage if the patient can benefit from physical therapy</Checkbox>
+    <Checkbox value="3">Medicare verbiage if the patient can benefit from physical therapy.</Checkbox>
     <Checkbox value="4">Spell check</Checkbox>
     <Checkbox value="5">Care plan</Checkbox>
     <Checkbox value="6">Medication discrepancy</Checkbox>
