@@ -3,12 +3,13 @@ import axios from 'axios';
 import * as pdfjsLib from 'pdfjs-dist/webpack';
 import Tesseract from 'tesseract.js';
 import pdfMake from "pdfmake/build/pdfmake";
+import logo from './logo.png';
 
 // import { PDFDocument } from 'pdf-lib';
 import pdfFonts from "pdfmake/build/vfs_fonts";
 // import { BrowserRouter as Router } from 'react-router-dom';
 import {
-  ChakraProvider, Checkbox, Spinner, Flex, Box, Heading, Button, Input, Text, FormControl, CheckboxGroup, FormLabel
+  ChakraProvider, Checkbox, Spinner, Flex, Box, Heading, Button, Input, Text, FormControl, CheckboxGroup, FormLabel, Image
 } from '@chakra-ui/react';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -174,10 +175,8 @@ const handleSubmit = async () => {
     });
   } catch (error) {
     setError("There was an error processing your request. Please try again.");
+    setIsLoading(false);
   }
-
-
-  // setIsLoading(false);
 };
 
 
@@ -185,9 +184,25 @@ const handleSubmit = async () => {
 return (
   <ChakraProvider>
     <Box as="div">
-      <Box as="header" bg="blue.500" p={4} color="white" textAlign="center">
-        <Heading as="h1">VistaScribe</Heading>
-      </Box>
+    <Box as="header" bg="#8C52FF" p={4} color="white" textAlign="center">
+  <Flex position="relative" alignItems="center" justifyContent="flex-start">
+    
+    <Image
+      src={logo}  // Replace with the actual path to your image
+      alt="VistaScribe Logo"
+      boxSize="80px"  // Adjust the size as needed
+      mr={2}  // Margin-right for spacing between logo and the centered text
+    />
+    
+    <Heading as="h1" position="absolute" left="50%" transform="translateX(-50%)">
+      VistaScribe
+    </Heading>
+
+  </Flex>
+</Box>
+
+
+
 
       <Box 
   p={4} 
@@ -196,13 +211,13 @@ return (
   mt={10}
   bg="gray.50"         // Set background color to a light blue from Chakra UI theme
   border="2px solid"    // Set border width to 2 pixels and style to solid
-  borderColor="blue.500" // Set border color to a darker blue from Chakra UI theme
+  borderColor="#8C52FF" // Set border color to a darker blue from Chakra UI theme
   borderRadius="md" 
   marginBottom="100px"    // Set border radius to a medium value from Chakra UI theme
 >
 {isLoading && (
   <Flex justifyContent="center" mt={4}>  {/* Added marginTop for some spacing */}
-    <Spinner size="xl" color="blue.500" />
+    <Spinner size="xl" color="#8C52FF" />
   </Flex>
 )}
 
@@ -239,7 +254,9 @@ return (
           
           <Box mt={4}>
           <Flex justifyContent="center" mt={4}>  {/* Added marginTop for some spacing */}
-  <Button type="submit" colorScheme="blue">Submit</Button>
+          <Button type="submit" bg="#8C52FF" color="white">
+  Submit
+</Button>
 </Flex>
 
 
