@@ -160,6 +160,7 @@ const handleSubmit = async () => {
 
           // Check if all tasks are complete
           if (completedResults.length === taskIds.length && !completedResults.includes(undefined)) {
+            setIsLoading(false);
             setResponseText(completedResults);  // Update state once all tasks are complete
           }
         }
@@ -170,7 +171,7 @@ const handleSubmit = async () => {
   }
 
 
-  setIsLoading(false);
+  // setIsLoading(false);
 };
 
 
