@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as pdfjsLib from 'pdfjs-dist/webpack';
 import Tesseract from 'tesseract.js';
 import pdfMake from "pdfmake/build/pdfmake";
-import logo from './logo.png';
+import logo from './logo2.png';
 
 // import { PDFDocument } from 'pdf-lib';
 import pdfFonts from "pdfmake/build/vfs_fonts";
@@ -184,22 +184,20 @@ const handleSubmit = async () => {
 return (
   <ChakraProvider>
     <Box as="div">
-    <Box as="header" bg="#8C52FF" p={4} color="white" textAlign="center">
-  <Flex position="relative" alignItems="center" justifyContent="flex-start">
-    
+    <Box as="header" bg="#8C52FF" p={4} color="white" textAlign="center" h="120px">  
+  <Flex alignItems="center" justifyContent="center" h="100%">
     <Image
-      src={logo}  // Replace with the actual path to your image
+      src={logo}  
       alt="VistaScribe Logo"
-      boxSize="80px"  // Adjust the size as needed
-      mr={2}  // Margin-right for spacing between logo and the centered text
+      height="100%"  // This makes the image's height fill its container
+      width="auto"   // This maintains the logo's original width
     />
-    
-    <Heading as="h1" position="absolute" left="50%" transform="translateX(-50%)">
-      VistaScribe
-    </Heading>
-
   </Flex>
 </Box>
+
+
+
+
 
 
 
