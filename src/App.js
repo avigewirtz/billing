@@ -205,7 +205,7 @@ return (
   border="2px solid"    // Set border width to 2 pixels and style to solid
   borderColor="#8C52FF" // Set border color to a darker blue from Chakra UI theme
   borderRadius="md" 
-  marginBottom="40px"    // Set border radius to a medium value from Chakra UI theme
+  marginBottom="100px"    // Set border radius to a medium value from Chakra UI theme
 >
 {isLoading && (
   <Flex justifyContent="center" mt={4}>  {/* Added marginTop for some spacing */}
