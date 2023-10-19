@@ -129,12 +129,17 @@ const handleSubmit = async () => {
   setError(null);
   resetResponseText();
 
-  if (notes.length === 0) {
+  if (notes.length === 0 && selectedOption.length === 0) {
+    alert("Please upload file(s) and select an option.");
+    return;
+  }
+
+  if (notes.length === 0 && !selectedOption.length === 0) {
     alert("Please upload file(s).");
     return;
   }
 
-  if (selectedOption.length === 0) {
+  if (selectedOption.length === 0 && !notes.length === 0) {
     alert("Please select an option.");
     return;
   }
