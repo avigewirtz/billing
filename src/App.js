@@ -5,6 +5,7 @@ import Tesseract from 'tesseract.js';
 import pdfMake from "pdfmake/build/pdfmake";
 import logo from './logo2.png';
 import Header from './Header';
+import Footer from './Footer';
 
 // import { PDFDocument } from 'pdf-lib';
 import pdfFonts from "pdfmake/build/vfs_fonts";
@@ -204,7 +205,7 @@ return (
   border="2px solid"    // Set border width to 2 pixels and style to solid
   borderColor="#8C52FF" // Set border color to a darker blue from Chakra UI theme
   borderRadius="md" 
-  marginBottom="100px"    // Set border radius to a medium value from Chakra UI theme
+  marginBottom="40px"    // Set border radius to a medium value from Chakra UI theme
 >
 {isLoading && (
   <Flex justifyContent="center" mt={4}>  {/* Added marginTop for some spacing */}
@@ -288,7 +289,8 @@ return (
         </form>
       </Box>
 
-      <Box as="footer"></Box>
+      <Box as="footer" position="fixed" bottom="0" width="100%">
+<Footer/></Box>
     </Box>
   </ChakraProvider>
 );
