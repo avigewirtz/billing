@@ -4,12 +4,13 @@ import * as pdfjsLib from 'pdfjs-dist/webpack';
 import Tesseract from 'tesseract.js';
 import pdfMake from "pdfmake/build/pdfmake";
 import logo from './logo2.png';
+import Header from './Header';
 
 // import { PDFDocument } from 'pdf-lib';
 import pdfFonts from "pdfmake/build/vfs_fonts";
 // import { BrowserRouter as Router } from 'react-router-dom';
 import {
-  ChakraProvider, Checkbox, Spinner, Flex, Box, Heading, Button, Input, Text, FormControl, CheckboxGroup, FormLabel, Image
+  ChakraProvider, Checkbox, Spinner, Flex, Box, Heading, Button, Input, Text, FormControl, CheckboxGroup, FormLabel
 } from '@chakra-ui/react';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -184,16 +185,8 @@ const handleSubmit = async () => {
 return (
   <ChakraProvider>
     <Box as="div">
-    <Box as="header" bg="#8C52FF" p={4} color="white" textAlign="center" h="120px">  
-  <Flex alignItems="center" justifyContent="center" h="100%">
-    <Image
-      src={logo}  
-      alt="VistaScribe Logo"
-      height="100%"  // This makes the image's height fill its container
-      width="auto"   // This maintains the logo's original width
-    />
-  </Flex>
-</Box>
+    <Header logoSrc={logo} />
+
 
 
 
