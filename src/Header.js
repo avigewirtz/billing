@@ -5,7 +5,7 @@ const Header = ({ logoSrc }) => {
   const { colorMode } = useColorMode();
 
   return (
-    <Box as="header" bg={colorMode === 'light' ? "#8C52FF" : "gray.800"} p={4} color="white">
+    <Box as="header" bg={colorMode === 'light' ? "#8C52FF" : "gray.800"} p={4} color="white" position="sticky" top="0" zIndex="1">
       <Flex alignItems="center" justifyContent="space-between" wrap="wrap" mx="5%">
 
         {/* Left Container for Navigation and Empty Space */}
