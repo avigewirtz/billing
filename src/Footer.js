@@ -11,8 +11,8 @@ const Footer = () => {
         {/* Left Container for Navigation and Empty Space */}
         <Flex alignItems="center" width={["auto", "auto", "20%"]}>
           {/* Navigation Links */}
-          <Text ml={3} cursor="pointer">Terms</Text>
-          <Text ml={3} cursor="pointer">Privacy</Text>
+          {/* <Text ml={3} cursor="pointer">Terms</Text>
+          <Text ml={3} cursor="pointer">Privacy</Text> */}
           {/* <Text ml={3} cursor="pointer">Contact</Text> */}
         </Flex>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Flex, Image, Text, useColorMode } from '@chakra-ui/react';
+import { Box, Flex, Image, useColorMode } from '@chakra-ui/react';
 
 const Header = ({ logoSrc }) => {
   const { colorMode } = useColorMode();
@@ -11,9 +11,9 @@ const Header = ({ logoSrc }) => {
         {/* Left Container for Navigation and Empty Space */}
         <Flex alignItems="center" width={["auto", "auto", "20%"]}>
           {/* Navigation Links */}
-          <Text ml={3} cursor="pointer">About</Text>
+          {/* <Text ml={3} cursor="pointer">About</Text>
           <Text ml={3} cursor="pointer">FAQ</Text>
-          <Text ml={3} cursor="pointer">Contact</Text>
+          <Text ml={3} cursor="pointer">Contact</Text> */}
         </Flex>
 
         {/* Logo - to ensure it is centered */}

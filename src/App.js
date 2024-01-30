@@ -11,7 +11,7 @@ import Footer from './Footer';
 import pdfFonts from "pdfmake/build/vfs_fonts";
 // import { BrowserRouter as Router } from 'react-router-dom';
 import {
-  ChakraProvider, Checkbox, Spinner, Flex, Box, Heading, Button, Input, Text, FormControl, CheckboxGroup, FormLabel
+  ChakraProvider, Checkbox, Spinner, Flex, Box, Heading, Button, Input, Text, FormControl, CheckboxGroup, FormLabel, Textarea
 } from '@chakra-ui/react';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -24,6 +24,8 @@ function App() {
   const [responseText, setResponseText] = useState([]);
   const [noteNames, setNoteNames] = useState([]);
   const [selectedOption, setSelectedOption] = useState([]);
+  const [textInput, setTextInput] = useState("");
+
 
 
   // eslint-disable-next-line no-unused-vars
@@ -125,17 +127,16 @@ const handleSubmit = async () => {
   console.log("Notes state:", notes);  // Debugging line
   console.log("Selected Option:", selectedOption); // Debugging line
 
-  
   setError(null);
   resetResponseText();
 
-  if (notes.length === 0 && selectedOption.length === 0) {
-    alert("Please upload file(s) and select an option.");
+  if (notes.length === 0 && selectedOption.length === 0 && textInput.trim() === "") {
+    alert("Please upload file(s) or paste note, and select an option.");
     return;
   }
 
-  if (notes.length === 0 && !selectedOption.length === 0) {
-    alert("Please upload file(s).");
+  if (notes.length === 0 && textInput.trim() === "" && !selectedOption.length === 0) {
+    alert("Please upload file(s) or paste note.");
     return;
   }
 
@@ -146,10 +147,17 @@ const handleSubmit = async () => {
 
   setIsLoading(true);
 
+  // If there is pasted text, add it to the notes array
+  if (textInput.trim() !== "") {
+    notes.push(textInput);
+    noteNames.push("Pasted Note"); // Add a placeholder name for the pasted note
+  }
+
   const data = {
     notes,
     choices: selectedOption 
   };
+
 
   try {
     const response = await axios.post('/api/get-prompt', data, {
@@ -234,6 +242,16 @@ return (
       
             <Input type="file" accept=".pdf" onChange={handleFileChange} multiple />
           </FormControl>
+
+          <FormControl id="text-input" mt={4}>
+    <FormLabel fontWeight="bold">And/Or Paste Note</FormLabel>
+    <Textarea 
+        placeholder="Enter your text here" 
+        value={textInput} 
+        onChange={(e) => setTextInput(e.target.value)}
+    />
+</FormControl>
+
 
           <FormControl id="info-selection" mt={4}>
           <FormLabel fontWeight="bold">Choose one or more options below</FormLabel>
